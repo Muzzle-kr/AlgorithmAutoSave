@@ -15,10 +15,8 @@ for i in compare:
     
     if target[mid] > i:
       end = mid - 1
-      continue
     elif target[mid] < i:
       start = mid + 1
-      continue
     else:
       ans.append(1)
       doesFind = True
