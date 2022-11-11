@@ -1,31 +1,31 @@
+# 에라토스테네스의 체
 import math
-import sys
-input = sys.stdin.readline
+arr = [0 for i in range(123456 * 2 + 1)]
+num = 123456 * 2
 
-def isPrimeNumber(num):
-  if num == 1 or num == 2 or num == 3:
-      return True
-  
-  if num % 2 == 0:
-      return False
-  
-  for i in range(3, math.ceil(math.sqrt(num)) + 1):
-    if num % i == 0:
-      return False
-  
-  return True
+for i in range(num):
+    arr[i] = i
 
-  
+for i in range(2, num + 1):
+    if arr[i] == 0:
+        continue
+    for j in range(i + i, num + 1, i):
+        arr[j] = 0
+
+# for i in range(2, num + 1):
+#     if arr[i] != 0:
+#         # print(f'{arr[i]}')
+
+
 while True:
-  num = int(input())
-  
-  if num == 0:
-    break
-  
-  count = 0
-  # num 보다 크고, 2num보다 작거나 같은 수
-  for i in range(num + 1, num * 2 + 1):
-    if isPrimeNumber(i):
-      # print(f'{i}는 소수입니다.')
-      count += 1
-  print(count)
+    n = int(input())
+    
+    if n == 0:
+        break
+    
+    count = 0
+    for i in range(n + 1, 2 * n + 1):
+        if arr[i] != 0:
+            count += 1
+    
+    print(count)
