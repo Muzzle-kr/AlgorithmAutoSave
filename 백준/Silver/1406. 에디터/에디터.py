@@ -21,6 +21,6 @@ for _ in range(int(input())):
             
     else:
         str1.append(order[2])
-
-str1.extend(reversed(str2))
+str2.reverse()
+str1.extend(str2)
 print(''.join(str1))
