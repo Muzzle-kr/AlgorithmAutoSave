@@ -15,10 +15,7 @@ for i in range(8):
         if dwarf[i] + dwarf[j] == targetSum:
             catchDwarf.append(dwarf[i])
             catchDwarf.append(dwarf[j])
-            # print(catchDwarf)
-            
 
 for i in dwarf:
     if i not in catchDwarf:
         print(i)
-# 아홉난쟁이의 합을 구함
