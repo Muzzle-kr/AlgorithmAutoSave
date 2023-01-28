@@ -1,0 +1,29 @@
+# -- 코드를 입력하세요
+# SELECT 
+#     * 
+# FROM
+#     CAR_RENTAL_COMPANY_RENTAL_HISTORY
+# WHERE MONTH()
+SELECT 
+    MONTH(C.START_DATE) AS MONTH,
+    C.CAR_ID,
+    COUNT(*) AS RECORDS
+FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY C,
+    (
+        SELECT CAR_ID, count(*) AS COUNT
+        FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
+        WHERE YEAR(START_DATE) = 2022
+        AND MONTH(START_DATE) BETWEEN 8 AND 10 
+        GROUP BY 1 
+        HAVING count(*) >= 5
+    ) CH
+WHERE C.CAR_ID = CH.CAR_ID
+AND MONTH(C.START_DATE) BETWEEN 8 AND 10 
+GROUP BY 1, 2
+HAVING COUNT(*) != 0
+ORDER BY 1 ASC, 2 DESC
+
+# 2022년 8~10월까지 대여횟수가 5회 이상인 자동차 <<< 서브쿼리 
+# 월별, ID별 총 대여 횟수 리스트
+# 월 기준 오름차순, 자동차 ID 기준 내림차순
+# 0인 경우 결과에서 제외
