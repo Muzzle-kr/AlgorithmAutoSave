@@ -1,0 +1,23 @@
+-- 코드를 입력하세요
+SELECT 
+    YEAR(SALES_DATE) AS YEAR,
+    MONTH(SALES_DATE) AS MONTH,
+    GENDER,
+    COUNT(DISTINCT(OS.USER_ID)) AS USERS
+FROM 
+    USER_INFO UI, ONLINE_SALE OS
+WHERE 
+    UI.USER_ID = OS.USER_ID
+GROUP BY 
+    1, 2, 3
+HAVING
+    GENDER IS NOT NULL
+ORDER BY
+    1, 2, 3
+
+
+# SELECT * FROM ONLINE_SALE
+# ORDER BY SALES_DATE
+# 년, 월, 성별별로 상품 구매한 회원 수 집계
+# 년, 월, 성별을 기준 오름차순
+# 성별 정보가 없는 경우 결과에서 제외
