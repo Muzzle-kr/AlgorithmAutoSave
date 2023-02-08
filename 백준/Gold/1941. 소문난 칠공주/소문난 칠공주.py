@@ -1,59 +1,53 @@
-import sys
 from itertools import combinations
 from collections import deque
+import sys
 
 input = sys.stdin.readline
-
 students = []
 direction = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-positions = [(i, j) for i in range(5) for j in range(5)]
-combs = list(combinations(positions, 7))
+orders = [(i, j) for i in range(5) for j in range(5)]
+lists = combinations(orders, 7)
+answer = 0
+
+for i in range(5):
+    students.append(list(input().strip()))
 
 
-def checkDasomPa(comb):
+def checkOverFourDasom(arr):    
+    count = 0
     
-    dasom = 0
-    for (x, y) in comb:
-        if students[x][y] == 'S':
-            dasom += 1
-        
-        if dasom >= 4:
-            return True
+    for (x, y) in arr:    
+        if students[x][y] == "S":
+            count += 1        
+        if count >= 4: return True
     return False
-    
 
-def checkAdjacent(comb):
+def checkAdjacent(arr):
     visit = [False] * 7
     q = deque()
-    q.append(comb[0])
+    q.append(arr[0])
     visit[0] = True
-    
     
     while q:
         x, y = q.popleft()
-
-        for (dx, dy) in direction:
-            nx = x + dx
-            ny = y + dy
+        
+        for dx, dy in direction:
+            nx, ny = x + dx, y + dy
             
-            if (nx, ny) in comb:                
-                nextIdx = comb.index((nx, ny))
-                if not visit[nextIdx]:
-                    visit[nextIdx] = True
-                    q.append((nx, ny))  
-    return False if False in visit else True
+            foundIndex = -1
+            for idx, i in enumerate(arr):
+                if i == (nx, ny):
+                    foundIndex = idx
 
-
-for _ in range(5):
-    students.append(list(input().strip()))
+            if foundIndex != -1 and visit[foundIndex] == False:
+                visit[foundIndex] = True
+                q.append((nx, ny))
     
+    return True if False not in visit else False
 
-count = 0
+for c in lists:
+    if checkOverFourDasom(c):
+        if checkAdjacent(c):
+            answer += 1
 
-for comb in combs:
-    if checkDasomPa(comb):
-        if checkAdjacent(comb):
-            count += 1
-
-print(count)     
-    
+print(answer)
