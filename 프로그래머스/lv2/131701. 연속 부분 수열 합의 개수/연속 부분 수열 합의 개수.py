@@ -1,17 +1,10 @@
 def solution(elements):
-    answer = set()
     length = len(elements)
-    
-    for i in elements:
-        answer.add(i)
-        
-    totalSum = sum(elements)
-    answer.add(totalSum)
-
     elements = elements * 2
+    result = set()
     
-    for limitLength in range(2, length):
-        for startIdx in range(length):
-            answer.add(sum(elements[startIdx:startIdx+limitLength]))
-
-    return len(answer)
+    for i in range(1, length + 1):
+        for j in range(length):
+            result.add(sum(elements[j:j+i]))
+    
+    return len(result)
