@@ -1,9 +1,14 @@
+'''
+백준 14500. 테크로미노
+https://www.acmicpc.net/problem/14500
+'''
 def solution():
     n, m = map(int, input().split())
     arr = [list(map(int, input().split())) for _ in range(n)]
     visit = [[0] * m for _ in range(n)]
     dx = [1, -1, 0, 0]
     dy = [0, 0, 1, -1]
+    # ㅗ(h) 모양
     figureH = [
             [(0, 0), (1, 0), (1, -1), (1, 1)],
             [(0, 0), (0, 1), (0, 2), (1, 1)],
