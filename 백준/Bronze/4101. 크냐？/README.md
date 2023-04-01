@@ -1,4 +1,4 @@
-# [Bronze III] 크냐? - 4101 
+# [Bronze V] 크냐? - 4101 
 
 [문제 링크](https://www.acmicpc.net/problem/4101) 
 
@@ -8,7 +8,7 @@
 
 ### 분류
 
-사칙연산(arithmetic), 구현(implementation), 수학(math)
+구현
 
 ### 문제 설명
 
