@@ -1,46 +1,43 @@
-def get_dist(n, edges):  
+def solution(n, edges):
     best_case, worst_case = n, 0
-    max_parent, min_parent = [i for i in range(n+1)], [i for i in range(n+1)]
+    min_parent, max_parent = [i for i in range(n+1)], [i for i in range(n+1)]
     
-    def get_parent(x, parent):
+    def get_parent(parent, x):
         if parent[x] == x:
             return x
-        return get_parent(parent[x], parent)
+        return get_parent(parent, parent[x])
 
-    def find_parent(a, b, parent):
-        a = get_parent(a, parent)
-        b = get_parent(b, parent)
+    def find_parent(parent, a, b):
+        a = get_parent(parent, a)
+        b = get_parent(parent, b)
         
         if a == b:
             return True
         return False
-
-    def union_parents(a, b, parent):
-        a = get_parent(a, parent)
-        b = get_parent(b, parent)
+            
+    def union_parent(parent, a, b):
+        a = get_parent(parent, a)
+        b = get_parent(parent, b)
         
-        if a > b:
-            parent[a] = b
-        else:
+        if a < b:
             parent[b] = a
+        else:
+            parent[a] = b
     
-    
-    for n1, n2, w in edges:
+    for a, b, downhill in edges:
         
-        # 내리막길일 때
-        if w == 1:
-            if not find_parent(n1, n2, min_parent): 
-                union_parents(n1, n2, min_parent)
+        if downhill == 1:
+            if not find_parent(min_parent, a, b):
+                union_parent(min_parent, a, b)
                 best_case -= 1
-        else:     
-            if not find_parent(n1, n2, max_parent): 
-                union_parents(n1, n2, max_parent)
+        else:
+            if not find_parent(max_parent, a, b):
+                union_parent(max_parent, a, b)
                 worst_case += 1
-                
-    return worst_case**2 - best_case**2 
         
-
-n, m = map(int, input().split())        
+    return worst_case**2 - best_case**2
+    
+n, m = map(int, input().split())
 edges = [tuple(map(int, input().split())) for _ in range(m+1)]
-result = get_dist(n, edges)
+result = solution(n, edges)
 print(result)
