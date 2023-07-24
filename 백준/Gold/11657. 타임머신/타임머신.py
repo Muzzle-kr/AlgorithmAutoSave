@@ -1,40 +1,37 @@
-import sys
-input = sys.stdin.readline
-n, m = map(int, input().split())
-INF = int(1e9)
-cities = [INF] * (n + 1)
-edges = []
 
-
-def bf(start):
-    cities[start] = 0
+def bellman_fod(start):
+    distance[start] = 0
     
-    for i in range(n):
+    # 모든 간선 확인
+    for i in range(1, n+1):
         for j in range(m):
-            cur, next, cost = edges[j]
+            now, next, dist = edges[j]
             
-
-            if cities[cur] != INF and cities[next] > cities[cur] + cost:
-                cities[next] = cities[cur] + cost
+            if distance[now] != INF and distance[next] > distance[now] + dist:
+                distance[next] = distance[now] + dist
                 
-                if i == n - 1:
+                if i == n:
                     return True
     return False
 
-
-for i in range(m):
-    a, b, c = map(int, input().split())
     
+n, m = map(int, input().split())
+edges = []
+INF = int(1e9)
+distance = [INF] * (n+1)
+
+for _ in range(m):
+    a, b, c = map(int, input().split())
     edges.append((a, b, c))
     
-    # 벨만 포드 알고리즘 수행
-negative_cycle = bf(1)
+result = bellman_fod(1)
 
-if negative_cycle:
-    print('-1')
+# 무한대 값이면 -1로 바꿔줌
+distance = [-1 if d == INF else d for d in distance]
+
+# 음수 순환 발생 시
+if result:
+    print(-1) 
 else:
-    for i in range(2, n + 1):
-        if cities[i] == INF:
-            print('-1')
-        else:    
-            print(cities[i])
+    for d in distance[2:]:
+        print(d)
