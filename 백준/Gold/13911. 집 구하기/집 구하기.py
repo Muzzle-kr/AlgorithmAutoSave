@@ -1,73 +1,67 @@
-import heapq
-input = __import__('sys').stdin.readline
- 
-# Input
-n, m = map(int, input().split()) 
-adj = [[] for _ in range(n + 3)] # 인접리스트 n + 3인 이유는 가상의 노드 2개 추가
- 
-# 가상의 노드 추가
-macV = n + 1 
-starV = n + 2
- 
-for i in range(m):
-    a, b, c = map(int, input().split())
-    adj[a].append([b, c])
-    adj[b].append([a, c])
- 
-mac, macinHome = map(int, input().split())
-macList = list(map(int, input().split()))
-star, starinHome = map(int, input().split())
-starList = list(map(int, input().split()))
- 
-# 가상의 노드에 연결
-for i in macList:
-    adj[macV].append([i, 0])
-    adj[i].append([macV, 0])
- 
-for i in starList:
-    adj[starV].append([i, 0])
-    adj[i].append([starV, 0])
- 
-# mac -> 집의 최소경로
-hq = []
-cost = [float('inf')] * (n + 3)
-cost[macV] = 0
-heapq.heappush(hq, [0, macV])
- 
-while hq:
-    t, x = heapq.heappop(hq) # t: 현재까지의 가중치, x는 현재 노드
-    if cost[x] != t: continue
-    for nx, nt in (adj[x]): # nx는 노드, nt는 가중치
-        # 가상의 노드를 지날순 없음
-        if nx == macV or nx == starV: continue
- 
-        if cost[nx] > t + nt:
-            cost[nx] = t + nt # nx비용 초기화
-            heapq.heappush(hq, [cost[nx], nx])
- 
- 
-# star -> 집의 최소경로
-hq = []
-costt = [float('inf')] * (n + 3)
-costt[starV] = 0
-heapq.heappush(hq, [0, starV])
- 
-while hq:
-    t, x = heapq.heappop(hq) # t: 현재까지의 가중치, x는 현재 노드
-    if costt[x] != t: continue
-    for nx, nt in (adj[x]): # nx는 노드, nt는 가중치
-        # 가상의 노드를 지날순 없음
-        if nx == macV or nx == starV: continue
+import heapq as hq
+import sys
+input = sys.stdin.readline
+
+def dijkstra(start):
+    q = []
+    dist = [float('inf')] * (V+3)
+    dist[start] = 0
+    hq.heappush(q, (0, start))
+    
+    while q:
+        cur_dist, cur_node = hq.heappop(q)
         
-        if costt[nx] > t + nt:
-            costt[nx] = t + nt # nx비용 초기화
-            heapq.heappush(hq, [costt[nx], nx])
- 
-ans = float('inf')
-for i in range(1, n + 1):
-    # 정점이 맥도날드나 스타벅스에 위치하면 오답.
-    if i in macList: continue
-    if i in starList: continue
-    if cost[i] <= macinHome and costt[i] <= starinHome: ans = min(ans, cost[i] + costt[i])
-if ans == float('inf'): print(-1)
-else: print(ans)
+        if dist[cur_node] < cur_dist:
+            continue
+        
+        
+        for next_node, next_dist in edges[cur_node]:
+            # 가상의 노드는 skip
+            if next_node == m_node or next_node == s_node:
+                continue
+            
+            if dist[next_node] > cur_dist + next_dist:
+                dist[next_node] = cur_dist + next_dist
+                hq.heappush(q, (dist[next_node], next_node))
+    return dist
+V, E = map(int, input().split())
+edges = [[] for _ in range(V+3)] # 가상의 노드 2개 추가
+
+for _ in range(E):
+    u, v, w = map(int, input().split())
+    edges[u].append((v, w))
+    edges[v].append((u, w))
+
+M, m_condition = map(int, input().split())
+m_list = list(map(int, input().split()))
+S, s_condition = map(int, input().split())
+s_list = list(map(int, input().split()))
+
+m_node = V+1
+s_node = V+2
+
+# 가상 노드 연결
+for m in m_list:
+    edges[m_node].append((m, 0))
+    edges[m].append((m_node, 0))
+
+for s in s_list:
+    edges[s_node].append((s, 0))
+    edges[s].append((s_node, 0))
+
+dist_m = dijkstra(m_node)
+dist_s = dijkstra(s_node)
+
+
+result = float('inf')
+for i in range(1, V+1):
+    if i in m_list: continue
+    if i in s_list: continue
+    
+    if dist_m[i] <= m_condition and dist_s[i] <= s_condition:
+        result = min(result, dist_m[i] + dist_s[i])
+
+if result == float('inf'):
+    print(-1)
+else:
+    print(result)
