@@ -1,4 +1,3 @@
-# 최대 큰 점수로 이기는 방법 -> 0을 많이 먹고, 1을 많이 먹는 방법
 import heapq as hq
 import sys
 import copy
@@ -8,7 +7,7 @@ sys.setrecursionlimit(10**6)
 def apply_weight(arr):
     total = 0
     for i in range(11):
-        total += (10**i) * arr[i]
+        total = (10**i) * arr[i]
     return total
 
 def get_score_diff(apeach, lion):
@@ -72,7 +71,7 @@ def solution(n, info):
     queue = []
     # 백트래킹 시작 
     bt(0, n, info, lion, queue)
-
+    
     
     if len(queue) == 0:
         return [-1]
