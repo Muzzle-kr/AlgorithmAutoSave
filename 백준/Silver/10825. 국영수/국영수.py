@@ -1,10 +1,14 @@
-arr = []
-for i in range(int(input())):
-    name, korean, english, math = input().split()
-    korean = int(korean)
-    english = int(english)
-    math = int(math) 
-    
-    arr.append([name, korean, english, math])
-    
-print("\n".join([i[0] for i in sorted(arr, key=lambda x:(-x[1], x[2], -x[3], x[0]))]))
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+student_marks = []
+
+for _ in range(n):
+    name, kor, eng, math = input().split()
+    student_marks.append([name, int(kor), int(eng), int(math)])
+
+student_marks.sort(key=lambda x: (-x[1], x[2], -x[3], x[0]))
+
+for student_info in student_marks:
+    print(student_info[0])
