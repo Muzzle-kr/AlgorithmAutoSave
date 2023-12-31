@@ -1,21 +1,8 @@
 import heapq as hq
-import sys
 
-input = sys.stdin.readline
-n, m, x = map(int, input().split())
-INF = int(1e9)
-roads = [[] * n for _ in range(n)]
-
-answer = 0
-x -= 1
-
-for _ in range(m):
-    s, e, t = map(int, input().split())
-    roads[s-1].append((e-1, t))
-    
 def dijkstra(start):
-    v = [0] * (n)
-    d = [INF] * (n)
+    visited = [0] * (N+1)
+    d = [int(1e9)] * (N+1)
     d[start] = 0
     
     heap = []
@@ -27,24 +14,29 @@ def dijkstra(start):
         if d[current] < dist:
             continue
         
-        # 방문처리
-        v[current] = 1
-        for next, distance in roads[current]:
+        # 방문 처리
+        visited[current] = 1
+        for next, distance in graph[current]:
             cost = dist + distance
             
-            if distance != 0 and v[next] == 0 and cost < d[next]:
-                    d[next] = d[current] + distance
-                    hq.heappush(heap, (cost, next))
+            if distance != 0 and visited[next] == 0 and cost < d[next]:
+                d[next] = d[current] + distance
+                hq.heappush(heap, (cost, next))
+    
     return d
+N, M, X = map(int, input().split())
+graph = [[] for _ in range(N+1)]
 
-for town in range(n):
-    totalDistance = 0
-    
-    if town != x:
-        d = dijkstra(town)
-        totalDistance = d[x]  # 마을에서 X까지 최단 거리
-    
-        nd = dijkstra(x)   
-        totalDistance += nd[town]  # X에서 마을까지 최단 거리
-        answer = max(answer, totalDistance)
+
+for _ in range(M):
+    a, b, t = map(int, input().split())
+    graph[a].append((b, t))
+
+FromXDist = dijkstra(X)
+answer = 0
+
+for i in range(1, N+1):
+    FromTownDist = dijkstra(i)
+    answer = max(answer, FromTownDist[X] + FromXDist[i])
+
 print(answer)
