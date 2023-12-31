@@ -1,43 +1,19 @@
-import heapq as hq
-                
-def solution():
+V, E = map(int, input().split())
+dist = [[int(1e9)] * (V+1) for _ in range(V+1)]
+
+for _ in range(E):
+    a, b, c = map(int, input().split())
+    dist[a][b] = c
     
-    def dijkstra():
+for k in range(1, V+1):
+    for i in range(1, V+1):
+        for j in range(1, V+1):
+            if dist[i][j] > dist[i][k] + dist[k][j]:
+                dist[i][j] = dist[i][k] + dist[k][j]
 
-        while heap:
-            d, s, nd = hq.heappop(heap)
+answer = int(1e9)
 
-            if s == nd:
-                return d
-            
-            if dArr[s][nd] < d:
-                continue            
-
-            for distance, next_node in edges[nd]:
-                cost = d + distance
-                
-                if distance != 0 and cost < dArr[s][next_node]:
-                        dArr[s][next_node] = cost
-                        hq.heappush(heap, (cost, s, next_node))
-        # 사이클을 못 찾은 경우
-        return -1
-
-    n, m = map(int, input().split())
+for i in range(1, V+1):
+    answer = min(answer, dist[i][i])
     
-    if m <= 1:
-        return -1
-    
-    INF = int(1e9)
-    edges = [[] for _ in range(n+1)]
-    heap = []
-    dArr = [[INF] * (n+1) for _ in range(n+1)]
-
-    for _ in range(m):
-        s, e, d = map(int, input().split())
-        edges[s].append((d, e))
-        dArr[s][e] = min(dArr[s][e], d)
-        hq.heappush(heap, (d, s, e))
-    
-    return dijkstra()
-
-print(solution())
+print(answer if answer != int(1e9) else -1)
