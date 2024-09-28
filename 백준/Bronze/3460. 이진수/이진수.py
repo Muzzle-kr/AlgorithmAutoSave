@@ -1,20 +1,12 @@
-def convertToBinary(n):
-    string = ""
-    
-    while n > 1:
-        string += str(n % 2)
-        n = n // 2
-    
-    string += str(n)
-    return string
+n = int(input())
+numbers = [int(input()) for _ in range(n)]
 
-for _ in range(int(input())):
-    number = int(input())
-    arr = []
+for number in numbers:
+    positions = []
+    binary = list(reversed(list(bin(number)[2:])))
     
-    binary = convertToBinary(number)
-
-    for idx, b in enumerate(binary):
-        if b == "1":
-            arr.append(idx)
-    print(*arr)
+    for idx in range(len(binary)):
+        if binary[idx] == "1":
+            positions.append(idx)
+    
+    print(*positions)
