@@ -1,19 +1,13 @@
-N, K = map(int, input().split())
+K, N = map(int, input().split())
 arr = list(map(int, input().split()))
+prefix = [0 for _ in range(K+1)]
 
-left = 0
-right = K
-total = sum(arr[left:right])
-result = total
+for i in range(K):
+    prefix[i+1] = prefix[i] + arr[i]
 
-while right < N:
-    total -= arr[left]
-    total += arr[right]
-    
-    if total > result:
-        result = total
-    
-    left += 1
-    right += 1
-    
-print(result)
+answer = []
+
+for i in range(N, K+1):
+    answer.append(prefix[i] - prefix[i-N])
+
+print(max(answer))
