@@ -1,13 +1,12 @@
-N, K = map(int, input().split())
-arr = []
+n, k = map(int, input().split())
 
-for i in range(1, int(N/2) + 1):
-    if N % i == 0:
-        arr.append(i)
+answer = []
 
-arr.append(N)
+for i in range(1, n+1):
+    if n % i == 0:
+        answer.append(i)
 
-if K > len(arr):
+if len(answer) >= k:
+    print(answer[k-1])
+else:
     print(0)
-else: 
-    print(arr[K-1])
