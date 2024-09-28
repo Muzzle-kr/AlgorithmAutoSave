@@ -1,6 +1,8 @@
-n = int(input())
-a = list(map(int, input().split()))
-sum = [a[0]]
-for i in range(len(a) - 1):
-    sum.append(max(sum[i] + a[i + 1], a[i + 1]))
-print(max(sum))
+N = int(input())
+arr = list(map(int, input().split()))
+prefix = [0 for _ in range(N+1)]
+
+for i in range(N):
+    prefix[i+1] = max(prefix[i] + arr[i], arr[i])
+
+print(max(prefix[1:]))
