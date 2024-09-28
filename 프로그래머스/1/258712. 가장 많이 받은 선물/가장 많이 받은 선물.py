@@ -1,46 +1,52 @@
 from collections import defaultdict
 
 def solution(friends, gifts):
-    index_of_gifts = defaultdict(int)
-    gift_give_get_dict = defaultdict(lambda:defaultdict(int))
+    gifts_given = defaultdict(int)
+    gifts_received = defaultdict(int)
+    gifts_between = defaultdict(lambda: defaultdict(int))
     
     for gift in gifts:
-        a, b = gift.split()
-        
-        # 보낸 선물이면 선물지수 +1
-        index_of_gifts[a] += 1
-        # 받은 선물이면 선물지수 -1
-        index_of_gifts[b] -= 1
-        
-        gift_give_get_dict[a][b] += 1
+        giver, receiver = gift.split()
+        gifts_given[giver] += 1
+        gifts_received[receiver] += 1
+        gifts_between[giver][receiver] += 1
     
-    gifts_by_index = defaultdict(int)
+    # 각 친구의 선물 지수 계산
+    gift_index = {}
     
-    for a_f in friends:
-        for b_f in friends:
-            if a_f == b_f:
-                continue
+    for friend in friends:
+        gift_index[friend] = gifts_given[friend] - gifts_received[friend]
+    
+    # 다음 달에 받을 선물 수를 저장할 딕셔너리
+    next_month_gifts = defaultdict(int)
+    
+    for i in range(len(friends)):
+        for j in range(i+1, len(friends)):
+            friend1 = friends[i]
+            friend2 = friends[j]
+
+            # 친구 쌍의 선물 주고받은 횟수
+            given1_to_2 = gifts_between[friend1][friend2]
+            given2_to_1 = gifts_between[friend2][friend1]
             
-            # 주고 받은 기록이 있다면
-            if gift_give_get_dict[a_f][b_f] != 0 or gift_give_get_dict[b_f][a_f] != 0:
-                # 주고 받은 기록이 더 많은 경우 선물지수 +1
-                if gift_give_get_dict[a_f][b_f] > gift_give_get_dict[b_f][a_f]:
-                    gifts_by_index[a_f] += 1
-                    continue
-                elif gift_give_get_dict[a_f][b_f] == gift_give_get_dict[b_f][a_f]:
-                    if index_of_gifts[a_f] > index_of_gifts[b_f]:
-                        gifts_by_index[a_f] += 1
-                        continue
+            if given1_to_2 + given2_to_1 > 0:
+                
+                if given1_to_2 > given2_to_1:
+                    next_month_gifts[friend1] += 1
+                elif given1_to_2 < given2_to_1:
+                    next_month_gifts[friend2] += 1
+                else:
+                    if gift_index[friend1] > gift_index[friend2]:
+                        next_month_gifts[friend1] += 1
+                    elif gift_index[friend1] < gift_index[friend2]:
+                        next_month_gifts[friend2] += 1
             else:
-                # 주고받은 기록이 없거나 주고 받은 기록이 같은 경우
-                if index_of_gifts[a_f] > index_of_gifts[b_f]:
-                    gifts_by_index[a_f] += 1
-            # elif index_of_gifts[a_f] < index_of_gifts[b_f]:
-            #     gifts_by_index[b_f] += 1
-    
-    answer = 0
-    
-    if gifts_by_index:
-        answer = max(gifts_by_index.values())
-    
-    return answer
+                if gift_index[friend1] > gift_index[friend2]:
+                    next_month_gifts[friend1] += 1
+                elif gift_index[friend1] < gift_index[friend2]:
+                    next_month_gifts[friend2] += 1
+            
+    if next_month_gifts:
+        return max(next_month_gifts.values())
+    else:
+        return 0
