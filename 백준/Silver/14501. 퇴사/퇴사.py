@@ -1,17 +1,31 @@
-n = int(input())
-time = []
-earn = []
-dp = [0 for _ in range(n+1)]
-
-for _ in range(n):
-    t, e = map(int, input().split())
-    time.append(t)
-    earn.append(e)
+def consultation(days, earn, current_day):
+    if current_day == n:
+        earns.append(earn)
+        return 
     
-for i in range(n-1, -1, -1):
-    # 퇴사일을 넘어갈 경우 이전 값을 가져옴
-    if i + time[i] > n:
-        dp[i] = dp[i+1]
-    else:
-        dp[i] = max(dp[i+1], dp[time[i]+i] + earn[i])
-print(dp[0])
+    
+    consultation_days, consultation_earn = consultations[current_day]
+    
+    # 이미 상담을 진행 중이라면 다음 날로 넘기기
+    if days > 0:    
+        consultation(days-1, earn, current_day+1)
+        return
+    
+    # 남은 날짜보다 상담시간이 길면 상담을 할 수 없다.
+    if current_day + consultation_days > n:
+        consultation(days-1, earn, current_day+1)
+        return
+    
+    # 상담하기
+    consultation(consultation_days-1, earn+consultation_earn, current_day+1)
+    # 상담하지 않기
+    consultation(days-1, earn, current_day+1)
+    return
+    
+n = int(input())
+consultations = [list(map(int, input().split())) for _ in range(n)]
+earns = []
+
+consultation(0, 0, 0)
+
+print(max(earns))
