@@ -1,57 +1,57 @@
-initial_asset = int(input())
+money = int(input())
 stocks = list(map(int, input().split()))
+jh_money = money
+jh_stocks = 0
+sm_money = money
+sm_stocks = 0
 
-a_asset, b_asset = initial_asset, initial_asset
-a_stock, b_stock = 0, 0
+increase_days = 0
+decrease_days = 0
+before_stock = 0
 
-result = ""
-rising_count, drop_count = 0, 0
-
-for idx, stock in enumerate(stocks):
+for day, stock in enumerate(stocks):
     
-    # print(f'{idx+1}차의 주식 가격은 {stock}입니다.')
-    if idx == 13:
-        a_result = a_asset + a_stock * stock
-        b_result = b_asset + b_stock * stock
+    # 상승장 or 하락장
+    if before_stock > stock:
+        decrease_days += 1
+        increase_days = 0
+    elif stock < before_stock:
+        increase_days += 1
+        decrease_days = 0
+    else:
+        increase_days = 0
+        decrease_days = 0
         
-        # print(f'마지막 날입니다. 준현이(A)의 총 자산은 : {a_result}입니다. 성민이의 총 자산은 : {b_result}입니다.')
-        if a_result > b_result:
+    before_stock = stock
+    
+    
+    # 상승장이 3일 이상일 경우 전량 매도
+    if increase_days >= 3 and sm_stocks:
+        sm_money = sm_stocks * stock
+        sm_stocks = 0
+        
+    # 하락장이 3일 이상일 경우 전량 매수
+    if decrease_days >= 3 and sm_money >= stock:
+        sm_stocks = sm_money // stock
+        sm_money = sm_money % stock
+        
+        
+    # 준현이는 살 수 있으면 무조건 구매
+    if jh_money >= stock:
+        jh_stocks = jh_money // stock
+        jh_money = jh_money % stock
+    
+    
+    # 마지막 날일 때 비교
+    if day == 13:
+        jh_result = jh_money + jh_stocks * stock
+        sm_result = sm_money + sm_stocks * stock
+
+        # print(f'jh_money: {jh_money}, jh_stocks: {jh_stocks}')
+        # print(f'sm_money: {sm_money}, sm_stocks: {sm_stocks}')
+        if jh_result > sm_result:
             print("BNP")
-        elif a_result < b_result:
+        elif jh_result < sm_result:
             print("TIMING")
         else:
             print("SAMESAME")
-        break
-    
-    # a의 전략 무조건 사기
-    if a_asset >= stock:
-        # print(f'------------------준현이의 주식 상황-------------------------')
-        # print(f'{idx+1}일 BNP전략으로 가능한 매도합니다.')
-        a_stock += a_asset // stock
-        a_asset %= stock
-        
-        # print(f'거래 결과: a_stock: {a_stock}, 남은 자산: a_asset: {a_asset}')
-    
-    if idx > 0:
-        if stocks[idx] > stocks[idx-1]:
-            # print(f'{idx+1}일차의 주식 가격 {stock}은 전날보다 상승하였습니다.')
-            rising_count += 1
-            drop_count = 0
-        elif stocks[idx] < stocks[idx-1]:
-            # print(f'{idx+1}일차의 주식 가격 {stock}은 전날보다 하락하였습니다.')
-            rising_count = 0
-            drop_count += 1
-            
-        # 3일 연속 상승장일 때 전량 매도
-        if rising_count == 3:
-            # print(f'------------------성민이의 주식 상황-------------------------')
-            # print(f'{idx+1}일 차에 전량 매도합니다.')
-            b_asset += b_stock * stock
-            b_stock = 0
-            # print(f'거래 결과: b_stock: {b_stock}, 남은 자산: b_asset: {b_asset}')
-        # 3일 연속 하락장일 때 전량 매수
-        if drop_count == 3:
-            # print(f'------------------성민이의 주식 상황-------------------------')
-            # print(f'{idx+1}일 차에 전량 매수합니다.')
-            b_stock += b_asset // stock
-            b_asset %= stock
