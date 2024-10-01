@@ -1,45 +1,30 @@
-from collections import deque
-from itertools import combinations
-
-
-def getDistance(sx, sy, ex, ey):
-    return abs(sx - ex) + abs(sy - ey)
-
-def deliver_chicken(arr):
-    left_chicken = [ch for ch in chicken_houses if ch not in arr]
-    count = 0
-    
-    for h in houses:
-        q = deque()
-        q.append((h[0], h[1], h[0], h[1]))
-        min_count = 1e9
-        
-        for lc in left_chicken:
-            min_count = min(min_count, getDistance(h[0], h[1], lc[0], lc[1]))
-        
-        count += min_count
-    return count
-            
-n, m = map(int, input().split())
-chicken_houses = []
+from itertools import combinations 
+N, M = map(int, input().split())
+maps = [list(map(int, input().split())) for _ in range(N)]
+chickens = []
 houses = []
-maps = [list(map(int, input().split())) for _ in range(n)]
 
-for i in range(n):
-    for j in range(n):
+for i in range(N):
+    for j in range(N):
         if maps[i][j] == 2:
-            chicken_houses.append([i, j])
+            chickens.append([i, j])
+            
         if maps[i][j] == 1:
             houses.append([i, j])
+            
+chicken_combinations = list(combinations(chickens, M))
+answer = float('inf')
 
-chicken_length = len(chicken_houses)
-houses_length = len(houses)
-combi = list(combinations(chicken_houses, chicken_length - m))
-answer = 1e9
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
+for combination in chicken_combinations:    
+    total = 0
+    
+    for x, y in houses:
+        min_chicken_distance = 99999999
+        
+        for cx, cy in combination:
+            chicken_distance = abs(cx-x) + abs(cy-y)
+            min_chicken_distance = min(min_chicken_distance, chicken_distance)
+        total += min_chicken_distance
+    answer = min(answer, total)
 
-for c in combi:
-    answer = min(answer, deliver_chicken(c))
-
-print(answer)    
+print(answer)
