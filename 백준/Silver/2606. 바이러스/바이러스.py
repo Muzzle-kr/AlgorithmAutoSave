@@ -1,28 +1,22 @@
-numberOfComputer = int(input())
-numberOfNetworks = int(input())
-network = [[] for _ in range(numberOfComputer + 1)]
-chk = [0] * (numberOfComputer + 1)
-answer = 0
+N = int(input())
+network = [[] for _ in range(N+1)]
 
-def dfs(n):
-    global answer
-    answer += 1
-    chk[n] = 1
+for _ in range(int(input())):
+    x, y = map(int, input().split())
+    network[x].append(y)
+    network[y].append(x)
+
+visited = [False] * (N + 1)
+count = 0
+
+def dfs(idx):
+    global count
+    visited[idx] = True
+    count += 1
     
-    for i in network[n]:
-        if chk[i] == 0:
-            dfs(i)
-    
-    
-for i in range(numberOfNetworks):
-    a, b = map(int, input().split())
-    network[a].append(b)
-    network[b].append(a)
-
-chk[1] = 1
-
-for i in network[1]:
-    if chk[i] == 0:
-        dfs(i)
-
-print(answer)
+    for next in network[idx]:
+        if not visited[next]:
+            dfs(next)
+            
+dfs(1)
+print(count-1)
