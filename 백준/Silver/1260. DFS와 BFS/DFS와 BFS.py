@@ -2,53 +2,49 @@ import sys
 from collections import deque
 
 input = sys.stdin.readline
-n, m, v = map(int, input().split())
-arr = [[] for _ in range(n+1)]
+N, M, V = map(int, input().rstrip().split())
+arr = [[] for _ in range(N+1)]
 
-    
-for _ in range(m):
-    a, b = map(int, input().split())
-    
-    arr[a].append(b)
-    arr[b].append(a)
+for _ in range(M):
+    v1, v2 = map(int, input().split())
+    arr[v1].append(v2)
+    arr[v2].append(v1)
 
-visit = [0] * (n + 1)
+visited = [False] * (N + 1)
 
-dfsArr = []
+for a in arr:
+    a.sort()
 
-for i in arr:
-    i.sort()
+dfs_result = []
+bfs_result = []
 
-def dfs(v):
-    visit[v] = 1
-    dfsArr.append(v)
-    
-    for i in arr[v]:
-        if visit[i] == 0:
-            dfs(i)
+def dfs(idx):
+    visited[idx] = True
+    dfs_result.append(idx)
+    for next in arr[idx]:
+        if not visited[next]:
+            dfs(next)
     return
-dfs(v)
 
-visit = [0] * (n + 1)
-
-bfsArr = []
-print(*dfsArr)
-
-
-def bfs(v):
+def bfs(idx):
     q = deque()
-    q.append(v)
-    visit[v] = 1
-    
+    q.append(idx)
+    visited = [False] * (N + 1)
+    visited[idx] = True
+
     while q:
-        vv = q.popleft()
-        bfsArr.append(vv)
-        if len(bfsArr) == n:
+        i = q.popleft()
+        bfs_result.append(i)
+        
+        if len(bfs_result) == N:
             break
-        for i in arr[vv]:
-            if visit[i] == 0:
-                visit[i] = 1
-                q.append(i)
-    print(*bfsArr)
-    
-bfs(v)
+        
+        for next in arr[i]:
+            if not visited[next]:
+                visited[next] = True
+                q.append(next)
+dfs(V)
+bfs(V)
+
+print(*dfs_result)
+print(*bfs_result)
