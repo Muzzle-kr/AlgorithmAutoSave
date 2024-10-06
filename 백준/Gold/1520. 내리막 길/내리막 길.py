@@ -1,26 +1,26 @@
 import sys
-input = sys.stdin.readline
-m, n = map(int, input().split())
-maps = [list(map(int, input().split())) for _ in range(m)]
-dp = [[-1] * n for _ in range(m)]
-direction = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+sys.setrecursionlimit(10**8)
 
-def dfs(x, y):
-    if x == m - 1 and y == n - 1:
+N, M = map(int, input().split())
+maps = [list(map(int, input().split())) for _ in range(N)]
+dp = [[-1] * M for _ in range(N)]
+
+def recur(y, x):    
+    if y == N-1 and x == M - 1:
         return 1
     
-    if dp[x][y] != -1:
-        return dp[x][y]
+    if dp[y][x] != -1:
+        return dp[y][x]
     
-    count = 0
-    
-    for i in range(4):
-        dx = direction[i][0] + x
-        dy = direction[i][1] + y
-        
-        if 0 <= dx < m and 0 <= dy < n and maps[x][y] > maps[dx][dy]:
-            count += dfs(dx, dy)
-    dp[x][y] = count
-    return dp[x][y]
+    ways = 0
 
-print(dfs(0, 0))
+    for dy, dx in [[0, 1], [0, -1], [1, 0], [-1, 0]]:
+        ny, nx = dy + y, dx + x
+        
+        if 0 <= ny < N and 0 <= nx < M and maps[y][x] > maps[ny][nx]:
+            ways += recur(ny, nx)
+            
+    dp[y][x] = ways
+    return dp[y][x]
+
+print(recur(0, 0))
