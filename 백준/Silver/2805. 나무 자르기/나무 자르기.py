@@ -1,28 +1,24 @@
-import sys
-import math
-input = sys.stdin.readline
+N, M = map(int, input().split())
+trees = list(map(int, input().split()))
 
-n, m = map(int, input().split())
 
-arr = list(map(int, input().split()))
-arr.sort()
+left = 0
+right = max(trees)
+answer = 0
 
-start = 1
-end = arr[-1]
-result = 0
-
-while start <= end:
-    saw = math.ceil((start + end) / 2)
+while left <= right:
+    saw_blood = (left + right) // 2
     total = 0
-    
-    for i in arr:
-        if i > saw:
-            total += (i - saw)
-    
-    if total < m:
-        end = saw - 1
-        
-    else:
-        start = saw + 1
 
-print(end)
+    
+    for height in trees:
+        total += max(0, height - saw_blood)
+    
+    # 필요한만큼 나무를 취했다면 정답을 최신화
+    if total >= M:
+        answer = saw_blood
+        left = saw_blood + 1
+    else:
+        right = saw_blood - 1
+
+print(answer)
