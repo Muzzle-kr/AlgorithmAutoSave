@@ -1,64 +1,51 @@
 #include <iostream>
 #include <vector>
-#include <string>
 
 using namespace std;
 
-int n, m;
+int r, c;
+vector<int> a_arr(26, 0);
+
 vector<int> dx = {0, 0, 1, -1};
 vector<int> dy = {1, -1, 0, 0};
 
 int answer = 0;
 
-vector<vector<char>> matrix(20, vector<char>(20));
-vector<bool> a_visited(26, false);
-
-void dfs(int x, int y, int count) {
-    bool canGo = false;
+void dfs(int x, int y, int count, auto & matrix) {
+    answer = max(answer, count);
 
     for (int i = 0; i < 4; i++) {
         int nx = x + dx[i];
         int ny = y + dy[i];
 
-        if (nx >= 0 && nx < n && ny >= 0 && ny < m) {
-            int n_number = matrix[nx][ny] - 'A';
-
-            if (!a_visited[n_number]) {
-                canGo = true;   
-                a_visited[n_number] = true;
-
-                dfs(nx, ny, count + 1);
-
-                a_visited[n_number] = false;
+        if (nx >= 0 && nx < r && ny >= 0 && ny < c) {
+            char alpha = matrix[nx][ny];
+            if (!a_arr[alpha - 65]) {
+                a_arr[alpha - 65] = 1;
+                dfs(nx, ny, count + 1, matrix);
+                a_arr[alpha - 65] = 0;
             }
         }
-    }
-
-    if (!canGo) {
-        answer = max(answer, count);
     }
 }
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-
-    cin >> n >> m;
+    cin >> r >> c;
     cin.ignore();
 
-    for (int i = 0; i < n; i++) {
+    vector<vector<char>> matrix(r, vector<char>(c));
+
+    for (int i = 0; i < r; i++) {
         string line;
         getline(cin, line);
 
-        for (int j = 0; j < m; j++) {
+        for (int j = 0; j < c; j++) {
             matrix[i][j] = line[j];
         }
     }
+    a_arr[matrix[0][0] - 65] = 1;
+    dfs(0, 0, 1, matrix);
+    cout << answer << endl;
 
-    a_visited[matrix[0][0] - 'A'] = true;
-    dfs(0, 0, 1);
-
-    cout << answer << '\n';
     return 0;
 }
