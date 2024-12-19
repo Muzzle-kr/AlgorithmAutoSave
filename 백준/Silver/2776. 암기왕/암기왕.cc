@@ -2,7 +2,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include <unordered_map>
+#include <unordered_set>
 using namespace std;
 
 int t;
@@ -20,12 +20,12 @@ int main() {
         vector<int> arr2;
 
         cin >> n;
-        unordered_map<int, int> check_hash;
+        unordered_set<int> check_set;
         
         for (int j = 0; j < n; j++) {
             int temp;
             cin >> temp;
-            check_hash[temp] = 1;
+            check_set.insert(temp);
         }
 
         sort(arr1.begin(), arr1.end());
@@ -35,7 +35,7 @@ int main() {
             int temp;
             cin >> temp;
 
-            if (check_hash[temp] == 1) {
+            if (check_set.find(temp) != check_set.end()) {
                 cout << 1 << "\n";
             } else {
                 cout << 0 << "\n";
