@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <map>
-
+#include <algorithm>
+#include <unordered_map>
 using namespace std;
 
 int t;
@@ -19,15 +20,15 @@ int main() {
         vector<int> arr2;
 
         cin >> n;
-        map<int, int> check_hash;
-
+        unordered_map<int, int> check_hash;
+        
         for (int j = 0; j < n; j++) {
             int temp;
             cin >> temp;
-            if (check_hash[temp] == 0) {
-                check_hash[temp] = 1;
-            }
+            check_hash[temp] = 1;
         }
+
+        sort(arr1.begin(), arr1.end());
 
         cin >> m;
         for (int j = 0; j < m; j++) {
