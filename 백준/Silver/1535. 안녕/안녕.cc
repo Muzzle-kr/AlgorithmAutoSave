@@ -9,44 +9,32 @@ int hp;
 vector<int> h;
 vector<int> p;
 int answer = 0;
-
-void thank_you(int idx, int remain_hp, int pleasure) {
-    if (idx == n) {
-        if (remain_hp > 0) {
-            answer = max(answer, pleasure);
-        }
-        return;
-    }
-
-    thank_you(idx + 1, remain_hp - h[idx], pleasure + p[idx]);
-    thank_you(idx + 1, remain_hp, pleasure);
-}
+vector<int> dp(100, 0);
 
 int main() {
     cin >> n;
-    cin.ignore();
 
-    string h_s, p_s;
-    getline(cin, h_s);
-    getline(cin, p_s);
-
-    stringstream h_ss(h_s);
-    stringstream p_ss(p_s);
-
-
-    int temp;
-
-    while (h_ss >> temp) {
-        h.push_back(temp);
+    for (int i = 0; i < n; i++) {
+        int tmp;
+        cin >> tmp;
+        h.push_back(tmp);
     }
 
-    while (p_ss >> temp) {
-        p.push_back(temp);
+    for (int i = 0; i < n; i++) {
+        int tmp;
+        cin >> tmp;
+        p.push_back(tmp);
     }
 
+   for (int i = 0; i < n; i++) {
+       for (int j = 99; j >= h[i]; j--) {
+           dp[j] = max(dp[j], dp[j - h[i]] + p[i]);
+       }
+   }
 
-    thank_you(0, 100, 0);
-
+    for (int i = 1; i < 100; i++) {
+        answer = max(answer, dp[i]);
+    }
     cout << answer << endl;
     return 0;
 }
