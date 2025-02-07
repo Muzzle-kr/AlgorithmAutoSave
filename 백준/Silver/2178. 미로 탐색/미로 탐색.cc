@@ -1,58 +1,55 @@
 #include <iostream>
 #include <vector>
-#include <queue>
 #include <tuple>
+#include <queue>
 
 using namespace std;
-typedef vector<vector<int>> vvi;
 
-int dx[] = {0, 0, -1, 1};
-int dy[] = {-1, 1, 0, 0};
+vector<int> dx = {0, 0, 1, -1};
+vector<int> dy = {1, -1, 0, 0};
 
-int bfs(const vvi maze, int n, int m) {
-    vvi visited(n, vector<int>(m, 0));
+int bfs(vector<vector<int>> &graph) {
+    int n = graph.size();
+    int m = graph[0].size();
+    vector<vector<bool>> visited(n, vector<bool>(m, false));
     queue<tuple<int, int, int>> q;
+    q.push({0, 0, 0});
+    visited[0][0] = true;
 
-    q.push({0, 0, 1});
-    visited[0][0] = 1;
-
-    while(!q.empty()) {
-        int x, y, dist;
-        tie(x, y, dist) = q.front();
+    while (!q.empty()) {
+        auto [x, y, c] = q.front();
         q.pop();
 
         if (x == n - 1 && y == m - 1) {
-            return dist;
+            return c + 1;
         }
 
         for (int i = 0; i < 4; i++) {
             int nx = x + dx[i];
             int ny = y + dy[i];
 
-            if (0 <= nx && nx < n && 0 <= ny && ny < m && maze[nx][ny] == 1 && !visited[nx][ny]) {
-                visited[nx][ny] = 1;
-                q.push({nx, ny, dist + 1});
-            }
+            if (nx < 0 || nx >= n || ny < 0 || ny >= m || visited[nx][ny] || graph[nx][ny] != 1) continue;
+            visited[nx][ny] = true;
+            q.push({nx, ny, c + 1});
         }
     }
-    return -1;
+    return 0;
 }
 
 int main() {
     int n, m;
     cin >> n >> m;
-    vvi v(n, vector<int>(m));
+    vector<vector<int>> matrix(n, vector<int>(m));
 
     for (int i = 0; i < n; i++) {
-        string row;
-        cin >> row;
-
+        string s;
+        cin >> s;
         for (int j = 0; j < m; j++) {
-            v[i][j] = row[j] - '0';
+            matrix[i][j] = s[j] - '0';
         }
     }
 
-    int result = bfs(v, n, m);
-    cout << result << "\n";
+    int result = bfs(matrix);
+    cout << result << endl;
     return 0;
 }
