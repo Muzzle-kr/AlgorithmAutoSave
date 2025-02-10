@@ -1,8 +1,8 @@
+a, b = map(int, input().split())
 arr = []
 
-for i in range(1, 1001):
-    for _ in range(i):
+for i in range(1, 50):
+    for j in range(i):
         arr.append(i)
-a, b = map(int, input().split())
 
 print(sum(arr[a-1:b]))
