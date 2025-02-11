@@ -1,14 +1,18 @@
 n, k = map(int, input().split())
-
-dp = [10001] * (k + 1)
 coins = [int(input()) for _ in range(n)]
-dp[0] = 0
-    
-for coin in coins:
-    for i in range(coin, k + 1):
-        dp[i] = min(dp[i], dp[i - coin] + 1)
+INF = 1e9
 
-if dp[k] == 10001:
+dp = [INF] * (k + 1)
+dp[0] = 0
+
+for i in range(k + 1):
+    
+    if dp[i] != INF:
+        for coin in coins:
+            if i + coin <= k:
+                dp[coin + i] = min(dp[i + coin], dp[i] + 1)
+    
+if dp[k] == INF:
     print(-1)
 else:
     print(dp[k])
